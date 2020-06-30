@@ -287,7 +287,6 @@ class _CompanionScreenState extends State<CompanionScreen> {
   }
 
   Widget _companionFAB(BuildContext context) {
-    IconData icon = Icons.save_alt;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
@@ -302,7 +301,7 @@ class _CompanionScreenState extends State<CompanionScreen> {
           width: 15.0,
         ),
         FloatingActionButton(
-          child: Icon(icon),
+          child: Icon(Icons.mail_outline),
           onPressed: () {
             final Email email = Email(
               recipients: ['ti.pi@online.de'],
