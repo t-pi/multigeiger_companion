@@ -23,21 +23,21 @@ flutter run
 ## Getting Started with MultiGeiger Companion
 
 Some links:
-* Project overview, hardware and embedded ESP32 based firmware development: https://github.com/ecocurious2/MultiGeiger
-* Map with Multigeiger data: https://multigeiger.citysensor.de/
-* Ecocurious: https://ecocurious.de/
-* TTN Region Stuttgart / IoT Makers Region Stuttgart e.V.: https://www.thethingsnetwork.org/community/region-stuttgart/
+* Project overview, hardware and embedded ESP32 based firmware development: <br>https://github.com/ecocurious2/MultiGeiger
+* Map with Multigeiger data: <br>https://multigeiger.citysensor.de/
+* Ecocurious: <br>https://ecocurious.de/
+* TTN Region Stuttgart / IoT Makers Region Stuttgart e.V.: <br>https://www.thethingsnetwork.org/community/region-stuttgart/
 
 This app:
 * collects data from connected MultiGeiger via Bluetooth®
 * displays the data in a chart
 * aggregates the data
-  * when a certain time, default 5 min, has passed, or
-  * when the location changes (default: ~10 m difference for new position update) AND more than a minimum (default: 3) of count rate packets were registered
+  * when a certain time (default: 5 min) has passed, or
+  * when the location changes (default: ~10 m difference for new position update) <br>AND more than a minimum (default: 3) of count rate packets were registered
 * sets a marker for every new data aggregation
 * shows current position and markers on a map
 
-The marker collection is not stored on the mobile device, but can be sent via mail.
+The current marker collection is not stored on the mobile device, but can be sent via the floating action button by mail.
 
 Screenshot:
 
