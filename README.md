@@ -13,7 +13,7 @@ For help getting started with Flutter, view the
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-If you have Flutter up and running, clone this repository and execute
+If you have Flutter up and running the demo successfully, clone this repository, connect your device and execute
 
 ```
 flutter run  
