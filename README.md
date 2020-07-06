@@ -1,32 +1,8 @@
-# multigeigercompanion
+# MultiGeiger Companion
 
-MultiGeiger companion app for mobile radiation measurements
-
-## Getting Started with Flutter
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-If you have Flutter up and running the demo successfully, clone this repository, connect your device and execute
-
-```
-flutter run  
-```
-
+The MultiGeiger Companion android app can be used for mobile radiation measurements.
 
 ## Getting Started with MultiGeiger Companion
-
-Some links:
-* Project overview, hardware and embedded ESP32 based firmware development: <br>https://github.com/ecocurious2/MultiGeiger
-* Map with Multigeiger data: <br>https://multigeiger.citysensor.de/
-* Ecocurious: <br>https://ecocurious.de/
-* TTN Region Stuttgart / IoT Makers Region Stuttgart e.V.: <br>https://www.thethingsnetwork.org/community/region-stuttgart/
 
 This app:
 * collects data from connected MultiGeiger via Bluetooth®
@@ -43,6 +19,11 @@ Screenshot:
 
 ![Screenshot](doc/Screenshot_Companion_v0.9.0.jpg)
 
+Some links:
+* Project overview, hardware and embedded ESP32 based firmware development: <br>https://github.com/ecocurious2/MultiGeiger
+* Map with Multigeiger data: <br>https://multigeiger.citysensor.de/
+* Ecocurious: <br>https://ecocurious.de/
+* TTN Region Stuttgart / IoT Makers Region Stuttgart e.V.: <br>https://www.thethingsnetwork.org/community/region-stuttgart/
 
 
 ## Bluetooth® Communication
@@ -63,3 +44,19 @@ The following characteristics are used:
   - Write characteristic, required by service's standard to reset Energy Expenditure to 0. Writing 0x01 resets the rolling packet counter to 0.
 
 
+## Getting Started with Flutter
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+
+For help getting started with Flutter, view the
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+
+If you have Flutter up and running the demo successfully, clone this repository, connect your device and execute
+
+```
+flutter run  
+```
