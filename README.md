@@ -44,7 +44,7 @@ The following characteristics are used:
   - Write characteristic, required by service's standard to reset Energy Expenditure to 0. Writing 0x01 resets the rolling packet counter to 0.
 
 
-## Getting Started with Flutter
+## Getting Started with Flutter and this app
 
 A few resources to get you started if this is your first Flutter project:
 
