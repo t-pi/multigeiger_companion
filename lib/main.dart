@@ -1,3 +1,7 @@
+// Project: MultiGeiger Companion
+// (c) 2020 by the authors, see AUTHORS file in toplevel directory.
+// Licensed under the MIT license, see LICENSE file in toplevel directory.
+
 import 'package:flutter/material.dart';
 import 'screen_companion.dart';
 

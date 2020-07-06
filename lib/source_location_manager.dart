@@ -34,6 +34,7 @@ class LocationManager {
   }
 
   updateLocation() async {
+    geolocationStatus = await Geolocator().checkGeolocationPermissionStatus();
     await geolocator.getCurrentPosition();
   }
 
