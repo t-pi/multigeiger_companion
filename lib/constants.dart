@@ -4,8 +4,8 @@ final cpmMinCurrentCpmPoints = 20; // cpmList will not be cut below this length
 final cpmMinIntegrationCounts = 3; // no new GeigerMarker before this many CPM values
 final cpmMaxIntegrationTime = Duration(minutes: 5); // new GeigerMarker after this
 final chartMaxLength = 100; // max chart time axis: this * cpmMaxIntegrationTime (less while moving)
-final startLatitude = 48.7;
-final startLongitude = 9.2;
+final startLatitude = 48.755757; // Stuttgarter Fernsehturm
+final startLongitude = 9.190172;
 
 // 16 bit UUIDS
 final bleServiceHeartRate = '180d'; // Heart Rate Service

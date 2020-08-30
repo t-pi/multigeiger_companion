@@ -31,11 +31,18 @@ class LocationManager {
         },
       );
     }
+    await updateLocation();
   }
 
   updateLocation() async {
     geolocationStatus = await Geolocator().checkGeolocationPermissionStatus();
-    await geolocator.getCurrentPosition();
+    if (geolocationStatus == GeolocationStatus.granted) {
+      Position pos = await geolocator.getCurrentPosition();
+      myPos = pos;
+      getAddressInfo();
+      onPosUpdate(myPos);
+      print('Position updated!');
+    }
   }
 
   stopLocationManager() async {
