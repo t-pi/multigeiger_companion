@@ -254,13 +254,14 @@ class _CompanionScreenState extends State<CompanionScreen> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        Text(
-                          'Location: ${(snapshot?.data == null) ? 'Unknown' : 'Lat: ${snapshot.data.latitude.toStringAsFixed(3)}, Lng: ${snapshot.data.longitude.toStringAsFixed(3)}'}',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        Text(
-                          '${geigerBrain.locationManager?.myAddress ?? ''}',
-                          style: TextStyle(fontSize: 14),
+                        InkWell(
+                          onTap: () => geigerBrain.locationManager.updateLocation(),
+                          child: Text(
+                            'Location: ${(snapshot?.data == null) ? 'Unknown' : 'Lat: ${snapshot.data.latitude.toStringAsFixed(3)}, Lng: ${snapshot.data.longitude.toStringAsFixed(3)}'}\r\n' +
+                                '${geigerBrain.locationManager?.myAddress ?? ''}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14),
+                          ),
                         ),
                         (geigerBrain.geolocationStatus == GeolocationStatus.granted)
                             ? mapWidget
@@ -287,37 +288,22 @@ class _CompanionScreenState extends State<CompanionScreen> {
   }
 
   Widget _companionFAB(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        FloatingActionButton(
-          heroTag: 'location refresh',
-          child: Icon(Icons.refresh),
-          onPressed: () {
-            geigerBrain.locationManager.updateLocation();
-          },
-        ),
-        SizedBox(
-          width: 15.0,
-        ),
-        FloatingActionButton(
-          child: Icon(Icons.mail_outline),
-          onPressed: () {
-            final Email email = Email(
-              recipients: ['ti.pi@online.de'],
-              subject:
-                  'MultiGeiger GeoJSON ${DateTime.now().toLocal().toIso8601String().substring(0, 19)}',
-              body: 'MultiGeiger data:\n\r' + geigerBrain.markerList.serialize(),
+    return FloatingActionButton(
+      child: Icon(Icons.mail_outline),
+      onPressed: () {
+        final Email email = Email(
+          subject:
+              'MultiGeiger GeoJSON ${DateTime.now().toLocal().toIso8601String().substring(0, 19)}',
+          body: 'MultiGeiger data:\n\r' + geigerBrain.markerList.serialize(),
+//          recipients: ['to@example.com'],
 //          cc: ['cc@example.com'],
 //          bcc: ['bcc@example.com'],
 //          attachmentPaths: ['/path/to/attachment.zip'],
-              isHTML: false,
-            );
+          isHTML: false,
+        );
 
-            FlutterEmailSender.send(email);
-          },
-        ),
-      ],
+        FlutterEmailSender.send(email);
+      },
     );
   }
 
