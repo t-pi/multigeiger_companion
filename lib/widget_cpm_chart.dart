@@ -32,6 +32,14 @@ class CpmChartWidget extends StatelessWidget {
       // should create the same type of [DateTime] as the data provided. If none
       // specified, the default creates local date time.
       dateTimeFactory: const charts.LocalDateTimeFactory(),
+      domainAxis: charts.DateTimeAxisSpec(
+        tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
+          minute: new charts.TimeFormatterSpec(
+            format: 'mm',
+            transitionFormat: 'H:mm',
+          ),
+        ),
+      ),
     );
   }
 }
