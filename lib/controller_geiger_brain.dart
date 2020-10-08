@@ -33,8 +33,8 @@ class GeigerBrain {
   GeolocationStatus geolocationStatus = GeolocationStatus.unknown;
 
   GeigerBrain() {
-    PackageInfo.fromPlatform()
-        .then((PackageInfo initialPackageInfo) => packageInfo = initialPackageInfo);
+    PackageInfo.fromPlatform().then(
+        (PackageInfo initialPackageInfo) => packageInfo = initialPackageInfo);
     geigerDevice = GeigerDeviceModel();
     cpmReadings = CpmReadingsModel();
     locationManager = LocationManager(onPosUpdate: _onPosUpdate);
@@ -82,17 +82,19 @@ class GeigerBrain {
     newMarker.type = GeoJsonFeatureType.point;
     newMarker.properties = {
       'name': '${markerCount}_${cpmReadings.radiationInfo}',
-      'marker-color': '#${cpmReadings.color.value.toRadixString(16).padLeft(8).substring(2)}',
+      'marker-color':
+          '#${cpmReadings.color.value.toRadixString(16).padLeft(8).substring(2)}',
       'marker-size': 'small',
       'cpm-average': cpmReadings.avgCpm,
       'cpm2rate': cpmReadings.cpm2rate,
     };
-    newMarker.geometry =
-        GeoJsonPoint(geoPoint: GeoPoint.fromLatLng(point: locationManager.myLatLng));
+    newMarker.geometry = GeoJsonPoint(
+        geoPoint: GeoPoint.fromLatLng(point: locationManager.myLatLng));
     markerList.collection.add(newMarker);
 
     if (aggregatedCpmList.length > chartMaxLength)
-      aggregatedCpmList.removeRange(0, aggregatedCpmList.length - chartMaxLength);
+      aggregatedCpmList.removeRange(
+          0, aggregatedCpmList.length - chartMaxLength);
     cpmList.removeRange(0, cpmList.length - cpmReadings.sumCounts);
     return true;
   }
@@ -129,17 +131,19 @@ class GeigerBrain {
     int cpm = (data[2] << 8) | data[1];
     int packet = (data[4] << 8) | data[3];
     cpmReadings.addCpm(cpm, packet);
-    cpmList.add(
-        CpmDatum((cpmReadings?.lastDataTime ?? DateTime.now()), cpmReadings.currentCpm.toDouble()));
+    cpmList.add(CpmDatum((cpmReadings?.lastDataTime ?? DateTime.now()),
+        cpmReadings.currentCpm.toDouble()));
     if (cpmReadings.integrationTime > (cpmMaxIntegrationTime.inSeconds / 60))
       resetCpm = _aggregateCpm();
-    cpmReadingStream.add(cpmReadings); // stream updates UI, incl. updated lists...
+    cpmReadingStream
+        .add(cpmReadings); // stream updates UI, incl. updated lists...
     if (resetCpm) cpmReadings.resetData();
   }
 
   connectBleDevice(BluetoothDevice device) async {
     if (bleDeviceManager != null) await disconnectBleDevice();
-    bleDeviceManager = BleDeviceManager(myBleDevice: device, onNotifyData: _onCpmDataUpdate);
+    bleDeviceManager =
+        BleDeviceManager(myBleDevice: device, onNotifyData: _onCpmDataUpdate);
     await bleDeviceManager.startDevice((event) => bleStateStream.add(event));
     geigerDevice.id = bleDeviceManager.bleName;
     geigerDevice.tubeType = bleDeviceManager.bleTubeType;

@@ -106,7 +106,10 @@ class FindBleDevicesScreen extends StatelessWidget {
             ),
             Text(
               'Bluetooth Adapter is ${state != null ? state.toString().substring(15) : 'not available'}.',
-              style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(color: Colors.white),
+              style: Theme.of(context)
+                  .primaryTextTheme
+                  .subtitle1
+                  .copyWith(color: Colors.white),
             ),
           ],
         ),
@@ -157,7 +160,8 @@ class FindBleDevicesScreen extends StatelessWidget {
           } else {
             return FloatingActionButton(
                 child: Icon(Icons.search),
-                onPressed: () => FlutterBlue.instance.startScan(timeout: Duration(seconds: 10)));
+                onPressed: () => FlutterBlue.instance
+                    .startScan(timeout: Duration(seconds: 10)));
           }
         },
       ),
@@ -175,7 +179,10 @@ class ScanResultTile extends StatelessWidget {
   // check for name prefix (e.g. "ESP32") and then for heart rate service
   Widget _buildButton(BuildContext context) {
     if (result.device.name.startsWith(bleDevicePrefix)) {
-      if (result.advertisementData.serviceUuids.toString().contains(bleServiceHeartRate)) {
+      if (result.advertisementData.serviceUuids
+          .toString()
+          .toLowerCase()
+          .contains(bleServiceHeartRate)) {
         return RaisedButton(
           child: Text('SELECT'),
           color: Colors.teal,
@@ -229,7 +236,10 @@ class ScanResultTile extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.caption.apply(color: Colors.black),
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .apply(color: Colors.black),
               softWrap: true,
             ),
           ),
@@ -240,7 +250,8 @@ class ScanResultTile extends StatelessWidget {
 
   // --> "[00, 0A, 23, ...]"
   String getNiceHexArray(List<int> bytes) {
-    return '[${bytes.map((i) => i.toRadixString(16).padLeft(2, '0')).join(', ')}]'.toUpperCase();
+    return '[${bytes.map((i) => i.toRadixString(16).padLeft(2, '0')).join(', ')}]'
+        .toUpperCase();
   }
 
   String getNiceManufacturerData(Map<int, List<int>> data) {
@@ -249,7 +260,8 @@ class ScanResultTile extends StatelessWidget {
     }
     List<String> res = [];
     data.forEach((id, bytes) {
-      res.add('${id.toRadixString(16).toUpperCase()}: ${getNiceHexArray(bytes)}');
+      res.add(
+          '${id.toRadixString(16).toUpperCase()}: ${getNiceHexArray(bytes)}');
     });
     return res.join(', ');
   }
@@ -276,11 +288,16 @@ class ScanResultTile extends StatelessWidget {
           width: 100.0,
           height: 20.0,
         ),
-        _buildAdvRow(context, 'Complete Local Name', result.advertisementData.localName),
         _buildAdvRow(
-            context, 'Tx Power Level', '${result.advertisementData.txPowerLevel ?? 'N/A'}'),
-        _buildAdvRow(context, 'Manufacturer Data',
-            getNiceManufacturerData(result.advertisementData.manufacturerData) ?? 'N/A'),
+            context, 'Complete Local Name', result.advertisementData.localName),
+        _buildAdvRow(context, 'Tx Power Level',
+            '${result.advertisementData.txPowerLevel ?? 'N/A'}'),
+        _buildAdvRow(
+            context,
+            'Manufacturer Data',
+            getNiceManufacturerData(
+                    result.advertisementData.manufacturerData) ??
+                'N/A'),
         _buildAdvRow(
             context,
             'Service UUIDs',

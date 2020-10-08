@@ -4,13 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 import 'package:multigeigercompanion/constants.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LocationManager {
   Position myPos;
   Function(Position) onPosUpdate;
   String myAddress = '';
-  LatLng get myLatLng =>
-      LatLng(myPos?.latitude ?? startLatitude, myPos?.longitude ?? startLongitude);
+  LatLng get myLatLng => LatLng(
+      myPos?.latitude ?? startLatitude, myPos?.longitude ?? startLongitude);
 
   GeolocationStatus geolocationStatus;
   Geolocator geolocator = Geolocator();
@@ -21,15 +22,17 @@ class LocationManager {
   LocationManager({@required this.onPosUpdate});
 
   Future<void> startLocationManager() async {
-    geolocationStatus = await Geolocator().checkGeolocationPermissionStatus();
-    if (geolocationStatus == GeolocationStatus.granted) {
-      posStream = geolocator.getPositionStream(locationOptions).listen(
-        (Position pos) {
-          myPos = pos;
-          getAddressInfo();
-          onPosUpdate(myPos);
-        },
-      );
+    if (await Permission.locationWhenInUse.request().isGranted) {
+      geolocationStatus = await Geolocator().checkGeolocationPermissionStatus();
+      if (geolocationStatus == GeolocationStatus.granted) {
+        posStream = geolocator.getPositionStream(locationOptions).listen(
+          (Position pos) {
+            myPos = pos;
+            getAddressInfo();
+            onPosUpdate(myPos);
+          },
+        );
+      }
     }
     await updateLocation();
   }
@@ -59,7 +62,8 @@ class LocationManager {
   Future<void> getAddressInfo() async {
     List<Placemark> place;
     if (myPos != null) {
-      place = await Geolocator().placemarkFromCoordinates(myPos.latitude, myPos.longitude);
+      place = await Geolocator()
+          .placemarkFromCoordinates(myPos.latitude, myPos.longitude);
       myAddress =
           '${place == null ? '' : '${place[0].thoroughfare} ${place[0].name}, ${place[0].locality}'}';
     } else
