@@ -181,7 +181,8 @@ class ScanResultTile extends StatelessWidget {
     if (result.device.name.startsWith(bleDevicePrefix)) {
       if (result.advertisementData.serviceUuids
           .toString()
-          .contains(bleServiceHeartRate.toUpperCase())) {
+          .toLowerCase()
+          .contains(bleServiceHeartRate)) {
         return RaisedButton(
           child: Text('SELECT'),
           color: Colors.teal,

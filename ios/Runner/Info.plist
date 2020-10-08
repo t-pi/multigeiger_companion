@@ -41,5 +41,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>"Multigeiger wants access to Your location"</string>
 </dict>
 </plist>
