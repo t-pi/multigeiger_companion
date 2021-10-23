@@ -46,8 +46,9 @@ class GeigerBrain {
   StatefulMapController statefulMapController;
   Future<void> bleStateStreamState;
 
-  List<CpmDatum> cpmList = List<CpmDatum>();
-  List<CpmDatum> aggregatedCpmList = List<CpmDatum>();
+  List<CpmDatum> cpmList = <CpmDatum>[];
+  List<CpmDatum> aggregatedCpmList = <CpmDatum>[];
+  List<Color> markerColorList = <Color>[];
   GeoJsonFeatureCollection markerList = GeoJsonFeatureCollection([]);
   int markerCount = 0;
 
@@ -65,17 +66,20 @@ class GeigerBrain {
     );
 
     markerCount++;
-    statefulMapController?.addMarker(
-      marker: Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
+    // markerColorList?.add(cpmReadings.color);
+    statefulMapController?.addStatefulMarker(
+      name: '${markerCount}_${cpmReadings.radiationInfo}',
+      statefulMarker: StatefulMarker(
+        state: <String, dynamic>{"color": cpmReadings.color},
+        anchorAlign: AnchorAlign.center,
+        // anchorPos: AnchorPos.align(AnchorAlign.center),
         point: locationManager.myLatLng,
-        builder: (_) => Icon(
+        builder: (_, Map<String, dynamic> state) => Icon(
           Icons.stop,
-          color: cpmReadings.color,
+          color: state["color"] as Color,
           size: 15.0,
         ),
       ),
-      name: '${markerCount}_${cpmReadings.radiationInfo}',
     );
 
     GeoJsonFeature newMarker = GeoJsonFeature();
