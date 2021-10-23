@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
@@ -58,7 +59,8 @@ class _CompanionScreenState extends State<CompanionScreen> {
                   icon = Icons.bluetooth_disabled;
                   color = Colors.red[200];
                   onPressed = (() async {
-                    BluetoothDevice newBleDevice = await Navigator.of(context).push(
+                    BluetoothDevice newBleDevice =
+                        await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => FindBleDevicesScreen(),
                       ),
@@ -163,9 +165,10 @@ class _CompanionScreenState extends State<CompanionScreen> {
                         'the MultiGeiger device, displays the data on a map and allows to export ' +
                         'the tracks. More Info:',
                   ),
-                  Hyperlink('https://multigeiger.citysensor.de', '\nMultiGeiger Map'),
                   Hyperlink(
-                      'https://github.com/ecocurious2/multigeiger', '\nMultiGeiger on GitHub'),
+                      'https://multigeiger.citysensor.de', '\nMultiGeiger Map'),
+                  Hyperlink('https://github.com/ecocurious2/multigeiger',
+                      '\nMultiGeiger on GitHub'),
                 ],
               );
             },
@@ -176,111 +179,144 @@ class _CompanionScreenState extends State<CompanionScreen> {
   }
 
   Widget _companionBody(BuildContext context) {
+    int myFlex = 2;
+    Orientation orientation = MediaQuery.of(context).orientation;
+    print("Orientation: $orientation");
+    if (orientation == Orientation.portrait) {
+      double ar = MediaQuery.of(context).size.aspectRatio;
+      print("ar: $ar");
+      myFlex = ar <= 0.5 ? 4 : 3;
+    }
     return SingleChildScrollView(
       child: Container(
+        height: orientation == Orientation.portrait
+            ? MediaQuery.of(context).size.height
+            : MediaQuery.of(context).size.height * 1.5,
         child: Column(
           children: <Widget>[
-            StreamBuilder<CpmReadingsModel>(
-                stream: geigerBrain.cpmReadingStream.stream,
-                builder: (c, snapshot) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Flexible(
-                              flex: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: <Widget>[
-                                    Text(
-                                      'Current CPM:',
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                    Text(
-                                      '${snapshot?.data?.currentCpm ?? 0}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24,
+            Flexible(
+              flex: 1,
+              child: StreamBuilder<CpmReadingsModel>(
+                  stream: geigerBrain.cpmReadingStream.stream,
+                  builder: (c, snapshot) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 0.0),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Flexible(
+                                flex: 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text(
+                                        'Current CPM:',
+                                        style: TextStyle(fontSize: 14),
                                       ),
-                                    ),
-                                    Text(
-                                      (snapshot?.data?.rate ?? 0) > 0
-                                          ? '${snapshot.data.rate.toStringAsFixed(3)} µSv/h\n(${snapshot.data.integrationTime.toStringAsFixed(1)} min)'
-                                          : '',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
+                                      Text(
+                                        '${snapshot?.data?.currentCpm ?? 0}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      'packet count: ${snapshot?.data?.packetCounter} \n@${snapshot?.data?.lastDataTime?.toIso8601String()?.substring(0, 19)}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey,
+                                      Text(
+                                        (snapshot?.data?.rate ?? 0) > 0
+                                            ? '${snapshot.data.rate.toStringAsFixed(3)} µSv/h\n(${snapshot.data.integrationTime.toStringAsFixed(1)} min)'
+                                            : '',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        'packet count: ${snapshot?.data?.packetCounter} \n@${snapshot?.data?.lastDataTime?.toIso8601String()?.substring(0, 19)}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Flexible(
+                              flex: 3,
+                              child: Container(
+                                height: 140.0,
+                                child: CpmChartWidget(
+                                  geigerBrain.aggregatedCpmList +
+                                      geigerBrain.cpmList,
+                                  animate: false,
                                 ),
-                              )),
-                          Flexible(
-                            flex: 3,
-                            child: Container(
-                              height: 140.0,
-                              child: CpmChartWidget(
-                                geigerBrain.aggregatedCpmList + geigerBrain.cpmList,
-                                animate: false,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
-            StreamBuilder(
-                stream: geigerBrain.latLngStream.stream,
-                initialData: LatLng(startLatitude, startLongitude),
-                builder: (c, snapshot) {
-                  if (snapshot.hasData && geigerBrain.statefulMapController != null)
-                    geigerBrain.statefulMapController.centerOnPoint(snapshot.data);
-                  return Center(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        InkWell(
-                          onTap: () => geigerBrain.locationManager.updateLocation(),
-                          child: Text(
-                            'Location: ${(snapshot?.data == null) ? 'Unknown' : 'Lat: ${snapshot.data.latitude.toStringAsFixed(3)}, Lng: ${snapshot.data.longitude.toStringAsFixed(3)}'}\r\n' +
-                                '${geigerBrain.locationManager?.myAddress ?? ''}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                        (geigerBrain.geolocationStatus == GeolocationStatus.granted)
-                            ? mapWidget
-                            : Container(
-                                height: 200.0,
-                                child: Text(
-                                  'Waiting for location service permission',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
+                    );
+                  }),
+            ),
+            Flexible(
+              flex: myFlex,
+              child: LayoutBuilder(
+                builder: (_, constraints) {
+                  print("Contraints: $constraints");
+                  return StreamBuilder(
+                    stream: geigerBrain.latLngStream.stream,
+                    initialData: LatLng(startLatitude, startLongitude),
+                    builder: (c, snapshot) {
+                      if (snapshot.hasData &&
+                          geigerBrain.statefulMapController != null)
+                        geigerBrain.statefulMapController
+                            .centerOnPoint(snapshot.data);
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            InkWell(
+                              onTap: () =>
+                                  geigerBrain.locationManager.updateLocation(),
+                              child: Text(
+                                'Location: ${(snapshot?.data == null) ? 'Unknown' : 'Lat: ${snapshot.data.latitude.toStringAsFixed(3)}, Lng: ${snapshot.data.longitude.toStringAsFixed(3)}'}\r\n' +
+                                    '${geigerBrain.locationManager?.myAddress ?? ''}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 14),
                               ),
-                        Text(
-                          'Last update: ${(geigerBrain.locationManager?.myPos == null) ? 'No valid position' : geigerBrain.locationManager.timestampInfo}',
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    ),
+                            ),
+                            (geigerBrain.geolocationStatus ==
+                                    GeolocationStatus.granted)
+                                ? Container(
+                                    child: mapWidget,
+                                    height: constraints.maxHeight - 70,
+                                  )
+                                : Container(
+                                    height: 200.0,
+                                    child: Text(
+                                      'Waiting for location service permission',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
+                                  ),
+                            Text(
+                              'Last update: ${(geigerBrain.locationManager?.myPos == null) ? 'No valid position' : geigerBrain.locationManager.timestampInfo}',
+                              style: TextStyle(fontSize: 12),
+                            )
+                          ],
+                        ),
+                      );
+                    },
                   );
-                }),
+                },
+              ),
+            ),
           ],
         ),
       ),

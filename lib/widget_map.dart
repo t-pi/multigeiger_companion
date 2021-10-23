@@ -18,13 +18,15 @@ class MapWidget extends StatefulWidget {
 
 class _MapWidgetState extends State<MapWidget> {
   MapController mapController;
-  StreamSubscription<StatefulMapControllerStateChange> statefulMapControllerSubscription;
+  StreamSubscription<StatefulMapControllerStateChange>
+      statefulMapControllerSubscription;
   bool _ready = false;
 
   @override
   void initState() {
     mapController = MapController();
-    widget.geigerBrain.statefulMapController = StatefulMapController(mapController: mapController);
+    widget.geigerBrain.statefulMapController =
+        StatefulMapController(mapController: mapController);
     widget.geigerBrain.statefulMapController.onReady.then((_) => _ready = true);
     statefulMapControllerSubscription =
         widget.geigerBrain.statefulMapController.changeFeed.listen((_) {
@@ -41,27 +43,25 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200.0,
-      child: FlutterMap(
-        mapController: mapController,
-        options: MapOptions(
-          center: LatLng(startLatitude, startLongitude),
-          zoom: 14.0,
+    return FlutterMap(
+      mapController: mapController,
+      options: MapOptions(
+        center: LatLng(startLatitude, startLongitude),
+        zoom: 14.0,
+      ),
+      layers: [
+        // widget.statefulMapController.tileLayer didn't show map tiles...
+        TileLayerOptions(
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: ['a', 'b', 'c'],
         ),
-        layers: [
-          // widget.statefulMapController.tileLayer didn't show map tiles...
-          TileLayerOptions(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: ['a', 'b', 'c'],
-          ),
-          MarkerLayerOptions(markers: widget.geigerBrain.statefulMapController?.markers ?? []),
+        MarkerLayerOptions(
+            markers: widget.geigerBrain.statefulMapController?.markers ?? []),
 //          PolylineLayerOptions(
 //              polylines: widget.geigerBrain.statefulMapController?.lines ?? Polyline()),
 //          PolygonLayerOptions(
 //              polygons: widget.geigerBrain.statefulMapController?.polygons ?? Polygon()),
-        ],
-      ),
+      ],
     );
   }
 }
